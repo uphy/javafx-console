@@ -12,9 +12,14 @@
  */
 package jp.uphy.javafx.console;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -49,8 +54,25 @@ public class ConsoleView extends BorderPane {
     }
     this.in = stream.getIn();
 
+    final ContextMenu menu = new ContextMenu();
+    menu.getItems().add(createItem("Clear console", e -> {
+      try {
+        stream.clear();
+        this.textArea.clear();
+      } catch (IOException e1) {
+        throw new RuntimeException(e1);
+      }
+    }));
+    this.textArea.setContextMenu(menu);
+
     setPrefWidth(600);
     setPrefHeight(400);
+  }
+
+  private MenuItem createItem(String name, EventHandler<ActionEvent> a) {
+    final MenuItem menuItem = new MenuItem(name);
+    menuItem.setOnAction(a);
+    return menuItem;
   }
 
   public PrintStream getOut() {

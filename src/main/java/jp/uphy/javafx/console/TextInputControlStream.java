@@ -60,6 +60,11 @@ class TextInputControlStream {
     });
   }
 
+  void clear() throws IOException {
+    this.in.clear();
+    this.out.clear();
+  }
+
   TextInputControlInputStream getIn() {
     return this.in;
   }
@@ -186,6 +191,11 @@ class TextInputControlStream {
     public void close() throws IOException {
       super.close();
     }
+
+    void clear() throws IOException {
+      this.inputTextTarget.flush();
+      this.lastLineBreakIndex = 0;
+    }
   }
 
   /**
@@ -260,6 +270,10 @@ class TextInputControlStream {
     @Override
     public void close() throws IOException {
       flush();
+    }
+
+    void clear() throws IOException {
+      this.buf = null;
     }
 
   }
