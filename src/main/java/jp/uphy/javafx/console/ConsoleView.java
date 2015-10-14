@@ -38,6 +38,7 @@ public class ConsoleView extends BorderPane {
     getStyleClass().add("console");
     this.textArea = new TextArea();
     this.textArea.setWrapText(true);
+    KeyBindingUtils.installEmacsKeyBinding(this.textArea);
     setCenter(this.textArea);
 
     final TextInputControlStream stream = new TextInputControlStream(this.textArea, Charset.defaultCharset());
