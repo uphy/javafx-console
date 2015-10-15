@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 
 /**
@@ -36,9 +37,13 @@ public abstract class ConsoleApplication extends Application {
     final String[] args = getParameters().getRaw().toArray(new String[0]);
     final ConsoleView console = new ConsoleView();
     final Scene scene = new Scene(console);
-    scene.getStylesheets().add(getClass().getResource("style.css").toString());
+    final URL styleSheetUrl = getStyleSheetUrl();
+    if (styleSheetUrl != null) {
+      scene.getStylesheets().add(styleSheetUrl.toString());
+    }
     primaryStage.setTitle(getClass().getSimpleName());
     primaryStage.setScene(scene);
+    primaryStage.setOnCloseRequest(e -> System.exit(0));
     primaryStage.show();
 
     System.setOut(console.getOut());
@@ -64,6 +69,19 @@ public abstract class ConsoleApplication extends Application {
     });
     thread.setName("Console Application Main Thread");
     thread.start();
+  }
+
+  protected URL getStyleSheetUrl() {
+    final String styleSheetName = "style.css";
+    URL url = getClass().getResource(styleSheetName);
+    if (url != null) {
+      return url;
+    }
+    url = ConsoleApplication.class.getResource(styleSheetName);
+    if (url != null) {
+      return url;
+    }
+    return null;
   }
 
   protected final void setPauseBeforeExit(final boolean pauseBeforeExit) {
